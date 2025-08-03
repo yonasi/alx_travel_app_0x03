@@ -1,7 +1,13 @@
-# alx_travel_app_0x00
+# alx_travel_app_0x01
 
-This project is a travel booking platform backend built with Django and Django REST Framework. It includes:
+## Overview
+This project implements API views to manage Listings and Bookings in a travel app using Django REST Framework. The API endpoints are documented with Swagger UI.
 
-- Models: Listing, Booking, Review
-- Seed data command to populate the database
-- Swagger API documentation
+## API Endpoints
+- `/api/listings/` — CRUD operations for Listings.
+- `/api/bookings/` — CRUD operations for Bookings.
+- `/swagger/` — API documentation.
+
+## How to Run
+```bash
+python manage.py runserver
