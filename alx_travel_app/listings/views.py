@@ -11,6 +11,8 @@ from rest_framework import status
 from .models import Payment, Booking
 from celery import shared_task
 from time import time
+from listings.serializers import BookingSerializer
+from .tasks import send_booking_confirmation_email
 
 class ListingViewSet(viewsets.ModelViewSet):
     queryset = Listing.objects.all()
@@ -135,3 +137,19 @@ class VerifyPaymentView(APIView):
             payment.status = 'FAILED'
             payment.save()
             return Response({'error': 'Chapa API error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class BookingViewSet(viewsets.ModelViewSet):
+    queryset = Booking.objects.all()
+    serializer_class = BookingSerializer
+
+    def perform_create(self, serializer):
+        # Save the booking
+        booking = serializer.save()
+        # Trigger Celery task to send confirmation email
+        send_booking_confirmation_email.delay(
+            booking_id=booking.id,
+            customer_email=booking.customer_email,
+            listing_title=booking.listing.title
+        )
+        return Response(serializer.data)
