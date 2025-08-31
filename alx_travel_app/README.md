@@ -1,34 +1,25 @@
-# ALX Travel App (alx_travel_app_0x02)
+# ALX Travel App 0x03
 
-A Django-based travel booking app with Chapa API for payment processing.
+A Django-based travel application with Celery and RabbitMQ for background task management and email notifications for booking confirmations.
 
-## Setup
+<details>
+<summary>Click to view full project documentation</summary>
 
-1. Clone the repository:
-   ```bash
-   git clone <repo-url>
-   cd alx_travel_app_0x02
+## Project Overview
 
-2. Set up a virtual environment:
-    ```bash
-    python3 -m venv venv
-    source venv/bin/activate
-    pip install -r requirements.txt
+This project extends `alx_travel_app_0x02` by integrating Celery with RabbitMQ to handle asynchronous tasks, specifically sending booking confirmation emails when a booking is created via the REST API. The application uses Django REST Framework for API endpoints and Django’s email backend for notifications.
 
-3. Configure environment variables in .env:
-    ```text
-    CHAPA_SECRET_KEY=CHAPA_AUTH_xxx
+## Features
 
-4. Apply migrations:
-    ```bash
-    python manage.py makemigrations
-    python manage.py migrate
+- **Asynchronous Email Notifications**: Sends booking confirmation emails using Celery when a booking is created.
+- **REST API**: Manages bookings through the `BookingViewSet` at `/api/bookings/`.
+- **Background Task Management**: Uses Celery with RabbitMQ as the message broker for reliable task execution.
 
-5. Start Redis and Celery:
-    ```bash
-    redis-server
-    celery -A alx_travel_app worker --loglevel=info
+## Prerequisites
 
-6. Run the server:
-    ```bash
-    python manage.py runserver
+- Python 3.8 or higher
+- Django 4.2 or higher
+- Celery 5.3 or higher
+- RabbitMQ 3.8 or higher
+- A valid SMTP email provider account (e.g., Gmail, SendGrid)
+- Git for version control
