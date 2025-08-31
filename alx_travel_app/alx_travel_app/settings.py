@@ -1,6 +1,6 @@
 from pathlib import Path
 import environ, os
-from decouple import config
+from decouple import configg
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
