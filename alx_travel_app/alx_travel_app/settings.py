@@ -1,6 +1,6 @@
 from pathlib import Path
 import environ, os
-from decouple import configg
+from decouple import config
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -14,9 +14,9 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 CHAPA_SECRET_KEY = config('CHAPA_SECRET_KEY')
-SECRET_KEY  = env("SECRET_KEY")
+SECRET_KEY  = os.getenv("DJANGO_SECRET_KEY", env)
 DEBUG       = env.bool("DEBUG")
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["yonasi.pythonanywhere.com", "127.0.0.1", "localhost"]
 
 
 # Application definition
@@ -29,8 +29,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'corsheaders',
+    'celery',
     'drf_yasg',
+    'corsheaders',
     'listings',
 ]
 
@@ -82,8 +83,9 @@ DATABASES = {
 
 
 REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
     "DEFAULT_AUTHENTICATION_CLASSES": ["rest_framework.authentication.SessionAuthentication"],
+    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
+    
 }
 CORS_ALLOWED_ORIGINS = []        
 
@@ -122,6 +124,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'static'
 TIME_ZONE = 'UTC'
 USE_TZ = True
 
@@ -141,9 +144,15 @@ EMAIL_HOST_PASSWORD = 'xjhn qryt nmed bwpk'
 DEFAULT_FROM_EMAIL = 'crmalxyn@gmail.com'
 
 # Celery settings
-CELERY_BROKER_URL = 'amqp://localhost'
-CELERY_RESULT_BACKEND = 'rpc://'
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'redis://localhost:6379/0')
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', 'redis://localhost:6379/0')
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Africa/Nairobi'
+
+
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
+    'SECURITY_DEFINITIONS': {},  # No auth for public access
+}
